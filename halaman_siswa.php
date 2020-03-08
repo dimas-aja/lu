@@ -38,6 +38,37 @@ include '_navbar.php';
 <center><h2 class="display-3">SELAMAT DATANG </h2></center>
                             <center><p class="lead">Anda Login Sebagai SISWA yang mempunyai semua Hak Akses</p>
                             <p>Tim Support</p></center>
+                              <?php 
+  include 'koneksi.php';
+  // cek apakah yang mengakses halaman ini sudah login
+  if($_SESSION['nama']==""){
+    header("location:index.php?pesan=gagal");
+  }
+  $nm=$_SESSION['nisn'];
+  $query=mysqli_query($konek,"SELECT * FROM pembayaran where nisn='$nm'");
+ 
+  ?>
+
+              <table border="1">
+                  <tr>
+                    <td>Tgl_Bayar</td>
+                    <td>ID_Pembayaran</td>
+                    <td>Jumlah Bayar</td>
+                  </tr>
+                  
+                    <?php while ($data=mysqli_fetch_array($query)) { ?>
+                    <tr>
+                    <td><?php echo $data['tgl_bayar']; ?></td>
+                    <td><?php echo "DIM".$data['id_pembayaran']; ?></td>
+                    <td><?php echo $data['jumlah_bayar']; ?></td>
+                    </tr>
+                    <?php } ?>
+                  
+              </table>
+          </div>
+          <div>
+
+
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
