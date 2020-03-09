@@ -37,7 +37,7 @@ include '_navbar.php';
 include 'koneks.php';
 
 if(isset($_GET['nisn']) && $_GET['nisn']!=''){
-  $sqlSiswa = mysqli_query($konek, "SELECT * FROM siswa WHERE nisn='$_GET[nisn]'");
+  $sqlSiswa = mysqli_query($konek, "SELECT siswa.*,pembayaran .* FROM siswa,pembayaran");
   $ds=mysqli_fetch_array($sqlSiswa);
   $nisn = $ds['nisn'];
 ?>
@@ -67,43 +67,6 @@ if(isset($_GET['nisn']) && $_GET['nisn']!=''){
 
 </table>
 
-<h3>Tagihan SPP Siswa</h3>
-<table border="1">
-  <tr>
-    <th>No</th>
-    <th>Bulan</th>
-    <th>Jatuh Tempo</th>
-    <th>No. Bayar</th>
-    <th>Tgl. Bayar</th>
-    <th>Jumlah</th>
-    <th>Keterangan</th>
-    <th>Bayar</th>
-  </tr>
-
-  <?php
-  $sql = mysqli_query($konek, "SELECT * FROM spp WHERE idsiswa='$ds[idsiswa]' ORDER BY jatuhtempo ASC");
-  $no=1;
-  while($d=mysqli_fetch_array($sql)){
-    echo "<tr>
-      <td>$no</td>
-      <td>$d[bulan]</td>
-      <td>$d[jatuhtempo]</td>
-      <td>$d[nobayar]</td>
-      <td>$d[tglbayar]</td>
-      <td>$d[jumlah]</td>
-      <td>$d[ket]</td>
-      <td align='center'>";
-        if($d['nobayar']==''){
-          echo "<a href='proses_transaksi.php?nis=$nis&act=bayar&id=$d[idspp]'>Bayar</a>";
-        }else{
-          echo "-";
-        }
-      echo "</td>
-    </tr>";
-    $no++;
-  }
-  ?>
-</table>
 
 <?php
 }
