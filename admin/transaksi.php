@@ -1,6 +1,6 @@
 
       <?php 
-      include 'koneks.php';
+
 include '_navbar.php';
  ?>
 
@@ -28,101 +28,50 @@ include '_navbar.php';
   <div class="col-13" >
    <div class="card">
     <div class="card-body">
-       <?php
+       <form method="get" action="">
+  NIS: <input type="text" name="nisn" />
+  <input type="submit" name="cari" value="Cari Siswa" />
+</form>
 
-        include 'koneksi.php';
+<?php
+include 'koneks.php';
 
-        
+if(isset($_GET['nisn']) && $_GET['nisn']!=''){
+  $sqlSiswa = mysqli_query($konek, "SELECT siswa.*,pembayaran .* FROM siswa,pembayaran");
+  $ds=mysqli_fetch_array($sqlSiswa);
+  $nisn = $ds['nisn'];
+?>
 
-     $sql = mysql_query("SELECT * FROM pembayaran ORDER BY nisn DESC");
+<h3>Biodata Siswa</h3>
+<table>
+    <tr>
+    <td>Tahun Ajaran</td>
+    <td>:</td>
+    <td><?php echo $ds['nisn']; ?></td>
+  </tr>
+  <tr>
+    <td>NIS</td>
+    <td>:</td>
+    <td><?php echo $ds['nis']; ?></td>
+  </tr>
+  <tr>
+    <td>Nama Siswa</td>
+    <td>:</td>
+    <td><?php echo $ds['nama']; ?></td>
+  </tr>
+  <tr>
+    <td>Kelas</td>
+    <td>:</td>
+    <td><?php echo $ds['id_kelas']; ?></td>
+  </tr>
 
-    echo '<h2>Transaksi PMB</h2><hr>';
-
-      echo '<div class="row">';
-
-    echo '<div class="col-md-9"><table class="table table-bordered" id="tampil">';
-
-     echo '<input type="text" id="search" class="form-control" placeholder="Cari Berdasarkan Nama siswa...">';
-
-    echo '<tr class="info"><th>#</th><th width="100">Tanggal</th><th>Nama Siswa</th><th>Jumlah Bayar</th>';
-
-    echo '<th width="200"><a href="./admin.php?hlm=bayar_pmb&sub=pmb&aksi=baru" class="btn btn-default btn-xs">Tambah Data</a></th></tr>';
-
-    
-
-if (isset($_POST['search'])) {
-
-  require_once 'koneksi.php';
-
-  $no = 1;
-
-  $search = $_POST['search'];
-
-  $sql=mysql_query("SELECT pembayaran.nis, pembayaran.tgl_bayar, sum(pembayaran.jumlah) as total from pembayaran WHERE pembayaran.nis group by pembayaran.nis ASC");
-
-      $noo = 1;
-
-      $bb=0;
-
-      while(list($nis,$tgl_bayar,$total) = mysql_fetch_array($sql)){
-
-        echo '<tr><td>'.$noo.'</td>';
-
-        echo '<td>'.$nis.'</td>';
-
-        $qprodi = mysql_query("SELECT nama FROM siswa WHERE siswa.nis = '$nis' nama LIKE '%".$search."%' ");
-
-        list($nama) = mysql_fetch_array($qprodi);
-
-        echo '<td>'.$nama.'</td>';
-
-        echo '<td>'.date('d M Y', strtotime($tgl_bayar)).'</td>';
-
-        echo '<td align=right>'.number_format($total).'</td>';
-
-        echo '</tr>';
-
-        $noo++;
-
-      }
-
-      
-
-      $sqll = mysql_query("SELECT SUM(jumlah) AS BAYAR FROM pembayaran");
-
-      while($db=mysql_fetch_array($sqll)){
-
-      $bb = $db['BAYAR'];
-
-      $cc=number_format($bb);
-
-          
-
-    }
+</table>
 
 
+<?php
+}
+?>
 
-      echo "<tr><td></td><td><b>JUMLAH</b></td><td></td><td></td><td align=right><b>$cc</b></td></tr>";
-
-    } else {
-
-      echo '<tr><td colspan="5"><em>Belum ada data</em></td></tr>';
-
-    }
-
-
-
-
-
-
-    
-
-    echo '</table></div></div>';
-
-  ?>
-
-          </div>
-          </div></div></div>
-          <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
-        <?php include '_footer.php' ?>
+<p>Pembayaran SPP dilakukan dengan cara mencari tagihan siswa dengan NIS melalui form di atas, kemudian proses pembayaran</p>
+</div></div></div></div>
+<?php include "_footer.php" ?>
